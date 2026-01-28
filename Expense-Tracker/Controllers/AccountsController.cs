@@ -1,5 +1,5 @@
 using Expense_Tracker.Data;
-using Expense_Tracker.Dtos;
+using Expense_Tracker.Dtos.Accounts;
 using Expense_Tracker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

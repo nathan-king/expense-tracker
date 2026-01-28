@@ -1,6 +1,6 @@
 using Expense_Tracker.Models;
 
-namespace Expense_Tracker.Dtos;
+namespace Expense_Tracker.Dtos.Accounts;
 
 public record AccountDto(
     int Id, 
