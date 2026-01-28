@@ -11,21 +11,36 @@ namespace Expense_Tracker.Controllers;
 public class AccountsController(ExpenseTrackerDbContext context) : ControllerBase // C# 12 primary constructor
 {
     [HttpGet]
-    public async Task<List<Account>> GetAccounts()
+    public async Task<ActionResult<AccountDto>> GetAccounts()
     {
-        return await context.Accounts
-            .Include(a => a.User)
+        List<AccountDto> accounts = await context.Accounts
+            .Select(account => new AccountDto
+            {
+                Id = account.Id,
+                Name = account.Name,
+                AccountType = account.AccountType,
+                UserId = account.UserId
+            })
             .ToListAsync();
+        return Ok(accounts);
     }
     
     [HttpGet("{id}")]
-    public async Task<ActionResult<Account>> GetAccountById(int id)
+    public async Task<ActionResult<AccountDto>> GetAccountById(int id)
     {
-        Account? account = await context.Accounts.FindAsync(id);
+        AccountDto? account = await context.Accounts
+            .Where(account => account.Id == id)
+            .Select(account => new AccountDto
+            {
+                Id = account.Id,
+                Name = account.Name,
+                AccountType = account.AccountType,
+                UserId = account.UserId
+            })
+            .FirstOrDefaultAsync();
+        
         if (account == null)
-        {
             return NotFound();
-        }
         return Ok(account);
     }
 
