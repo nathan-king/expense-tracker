@@ -11,22 +11,33 @@ namespace Expense_Tracker.Controllers;
 public class UsersController(ExpenseTrackerDbContext context) : ControllerBase
 {
     [HttpGet]
-    public async Task<List<User>> GetUsers()
+    public async Task<ActionResult<List<UserDto>>> GetUsers()
     {
-        return await context.Users.ToListAsync();
+        List<UserDto> users = await context.Users
+            .Select(user => new UserDto(
+                user.Id,
+                user.Name,
+                user.Email
+            ))
+            .ToListAsync();
+        return Ok(users);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<UserDto>> GetUserById(int id)
     {
-        User? user = await context.Users.FindAsync(id);
+        UserDto? user = await context.Users
+            .Where(user => user.Id == id)
+            .Select(user => new UserDto(
+                user.Id,
+                user.Name,
+                user.Email
+            ))
+            .FirstOrDefaultAsync();
         
         if (user == null)
-        {
             return NotFound();
-        }
-        
-        return user;
+        return Ok(user);
     }
 
     [HttpPost]
@@ -40,6 +51,7 @@ public class UsersController(ExpenseTrackerDbContext context) : ControllerBase
         
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        
+        return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
     }
 }

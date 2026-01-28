@@ -11,16 +11,15 @@ namespace Expense_Tracker.Controllers;
 public class AccountsController(ExpenseTrackerDbContext context) : ControllerBase // C# 12 primary constructor
 {
     [HttpGet]
-    public async Task<ActionResult<AccountDto>> GetAccounts()
+    public async Task<ActionResult<List<AccountDto>>> GetAccounts()
     {
         List<AccountDto> accounts = await context.Accounts
-            .Select(account => new AccountDto
-            {
-                Id = account.Id,
-                Name = account.Name,
-                AccountType = account.AccountType,
-                UserId = account.UserId
-            })
+            .Select(account => new AccountDto(
+                account.Id,
+                account.Name,
+                account.AccountType,
+                account.UserId
+            ))
             .ToListAsync();
         return Ok(accounts);
     }
@@ -30,13 +29,12 @@ public class AccountsController(ExpenseTrackerDbContext context) : ControllerBas
     {
         AccountDto? account = await context.Accounts
             .Where(account => account.Id == id)
-            .Select(account => new AccountDto
-            {
-                Id = account.Id,
-                Name = account.Name,
-                AccountType = account.AccountType,
-                UserId = account.UserId
-            })
+            .Select(account => new AccountDto(
+                account.Id,
+                account.Name,
+                account.AccountType,
+                account.UserId
+            ))
             .FirstOrDefaultAsync();
         
         if (account == null)
