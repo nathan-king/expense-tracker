@@ -57,4 +57,42 @@ public class AccountsController(ExpenseTrackerDbContext context) : ControllerBas
         
         return CreatedAtAction(nameof(GetAccountById), new { id = account.Id }, account);
     }
+
+    [HttpPut("{id}")]   
+    public async Task<ActionResult<AccountDto>> UpdateAccount(int id, UpdateAccountDto updateAccountDto)
+    {
+        Account? account = await context.Accounts.FindAsync(id);
+
+        if (account == null)
+            return NotFound();
+
+        if (updateAccountDto.Name != null)
+            account.Name = updateAccountDto.Name;
+
+        if (updateAccountDto.AccountType != null)
+            account.AccountType = updateAccountDto.AccountType.Value;
+        
+        await context.SaveChangesAsync();
+
+        return Ok(new AccountDto(
+            account.Id,
+            account.Name,
+            account.AccountType,
+            account.UserId
+        ));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAccount(int id)
+    {
+        Account? account = await context.Accounts.FindAsync(id);
+
+        if (account == null)
+            return NotFound();
+        
+        context.Accounts.Remove(account);
+        await context.SaveChangesAsync();
+        
+        return NoContent();
+    }
 }

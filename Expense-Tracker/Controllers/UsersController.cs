@@ -54,4 +54,37 @@ public class UsersController(ExpenseTrackerDbContext context) : ControllerBase
         
         return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UserDto>> UpdateUser(int id, UpdateUserDto updateUserDto)
+    {
+        User? user = await context.Users.FindAsync(id);
+            
+        if (user == null)
+            return NotFound();
+        
+        if (updateUserDto.Name != null)
+            user.Name = updateUserDto.Name;
+        
+        if (updateUserDto.Email != null)
+            user.Email = updateUserDto.Email;
+
+        await context.SaveChangesAsync();
+        
+        return Ok(new UserDto(user.Id, user.Name, user.Email));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        User? user = await context.Users.FindAsync(id);
+
+        if (user == null)
+            return NotFound();
+        
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
+        
+        return NoContent();
+    }
 }
