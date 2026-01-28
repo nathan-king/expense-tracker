@@ -19,7 +19,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
-// Redirect to swagger for easy testing
-app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.Run();
