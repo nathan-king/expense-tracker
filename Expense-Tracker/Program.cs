@@ -7,6 +7,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ExpenseTrackerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddControllers();
 
 WebApplication app = builder.Build();
 
@@ -17,9 +18,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 // Redirect to swagger for easy testing
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.Run();
-
-// -> Next Step - Create Schemas
