@@ -17,6 +17,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseHttpsRedirection();
 app.MapControllers();
 

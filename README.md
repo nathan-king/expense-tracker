@@ -96,3 +96,45 @@ This project is under active development. Planned next steps include:
 3. Apply database migrations
 4. Run the project using the .NET CLI or your preferred IDE
 5. Open the Swagger UI to explore available endpoints
+
+## Running the application (Docker)
+
+This project is fully containerised and can be run locally using Docker Compose.
+The setup runs both the API and a PostgreSQL database in separate containers.
+
+### Requirements
+- Docker
+- Docker Compose
+
+### Start the application
+
+```bash
+docker compose up --build
+```
+
+The API will be available at:
+
+http://localhost:8080/swagger
+
+PostgreSQL runs inside a container and does not require a local installation.
+
+## Running without Docker (optional)
+
+For development without containers:
+
+1. Clone the repository
+2. Ensure PostgreSQL is running locally
+3. Configure the connection string
+4. Apply database migrations
+5. Run the project using the .NET CLI or your IDE
+6. Open the Swagger UI to explore available endpoints
+
+## Deployment status
+
+This project is designed to be deployable using container-based hosting platforms
+but is not permanently hosted.
+
+The focus of the repository is backend architecture, data modelling and API design
+rather than operating a live service.
+
+The application can be deployed to any container-compatible platform if required.
